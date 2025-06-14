@@ -1,6 +1,7 @@
+// File: models/Pelaporan.js
 import mongoose from "mongoose";
 
-const pelaporanSchema = new mongoose.Schema(
+const PelaporanSchema = new mongoose.Schema(
   {
     jenis: {
       type: String,
@@ -19,24 +20,14 @@ const pelaporanSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    lokasi: {
-      type: String, // nanti bisa dikembangkan ke koordinat
-      required: true,
-    },
-    tujuan: {
+    provinsi: String,
+    kabupaten: String,
+    kecamatan: String,
+    tujuan: String,
+    kategori: String,
+    status: {
       type: String,
-      required: true,
-    },
-    kategori: {
-      type: String,
-      enum: [
-        "agama",
-        "ekonomi_keuangan",
-        "kesehatan",
-        "ketentraman",
-        "perlindungan",
-      ],
-      required: true,
+      default: "belum terlaksana",
     },
   },
   {
@@ -44,5 +35,4 @@ const pelaporanSchema = new mongoose.Schema(
   }
 );
 
-const Pelaporan = mongoose.model("Pelaporan", pelaporanSchema);
-export default Pelaporan;
+export default mongoose.model("Pelaporan", PelaporanSchema);
