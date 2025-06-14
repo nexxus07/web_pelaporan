@@ -1,0 +1,50 @@
+{
+  "11": [
+    {
+      "id": "1101",
+      "nama": "Kabupaten Simeulue"
+    },
+    {
+      "id": "1102",
+      "nama": "Kabupaten Aceh Singkil"
+    },
+    {
+      "id": "1103",
+      "nama": "Kabupaten Aceh Selatan"
+    }
+  ],
+  "12": [
+    {
+      "id": "1201",
+      "nama": "Kabupaten Nias"
+    },
+    {
+      "id": "1202",
+      "nama": "Kabupaten Mandailing Natal"
+    },
+    {
+      "id": "1271",
+      "nama": "Kota Medan"
+    }
+  ],
+  "31": [
+    {
+      "id": "3171",
+      "nama": "Kota Jakarta Selatan"
+    },
+    {
+      "id": "3172",
+      "nama": "Kota Jakarta Timur"
+    }
+  ],
+  "32": [
+    {
+      "id": "3201",
+      "nama": "Kabupaten Bogor"
+    },
+    {
+      "id": "3271",
+      "nama": "Kota Bandung"
+    }
+  ]
+}
