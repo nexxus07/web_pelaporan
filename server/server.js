@@ -3,8 +3,10 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-// Import route pelaporan
+
+// Import route pelaporan & user
 import pelaporanRoutes from "./routes/pelaporan.js";
+import userRoutes from "./routes/user.js"; // ✅ Tambahkan ini
 
 // Konfigurasi environment variable
 dotenv.config();
@@ -13,8 +15,8 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors()); // ✅ Ini digunakan sebelum route
-app.use(express.json()); // agar bisa baca body JSON
+app.use(cors()); // ✅ aktifkan CORS
+app.use(express.json()); // ✅ parse body JSON
 
 // Koneksi ke MongoDB
 mongoose
@@ -25,8 +27,9 @@ mongoose
   .then(() => console.log("✅ Terhubung ke MongoDB Atlas"))
   .catch((err) => console.error("❌ Gagal koneksi ke MongoDB:", err));
 
-// Gunakan route pelaporan
-app.use("/api/pelaporan", pelaporanRoutes);
+// Gunakan route pelaporan dan user
+app.use("/api/pelaporan", pelaporanRoutes); // Route pelaporan
+app.use("/api/user", userRoutes); // ✅ Route user (untuk simpan user Firebase)
 
 // Route dasar
 app.get("/", (req, res) => res.send("SiPelMasD backend berjalan!"));
