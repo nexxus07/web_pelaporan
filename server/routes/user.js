@@ -22,4 +22,23 @@ router.post("/save", async (req, res) => {
   }
 });
 
+// GET semua user
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 });
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Gagal mengambil data user" });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "User berhasil dihapus" });
+  } catch (err) {
+    res.status(500).json({ error: "Gagal menghapus user" });
+  }
+});
+
 export default router;

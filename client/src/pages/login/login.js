@@ -24,7 +24,9 @@ class Login extends Component {
         }
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // Login sukses, redirect ke laporan
+                // Set status login
+                localStorage.setItem('isLogin', 'true');
+                // Redirect ke laporan
                 window.location.href = '/laporan';
             })
             .catch((error) => {
