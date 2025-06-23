@@ -12,7 +12,6 @@ function Dashboard() {
                 </p>
                 <div className="dashboard-actions">
                     <a href="/laporan" className="dashboard-btn">Buat Laporan</a>
-                    {/* <a href="/admin" className="dashboard-btn dashboard-btn-secondary">Admin Panel</a> */}
                 </div>
             </div>
         </div>

@@ -82,8 +82,7 @@ function FormLaporan() {
   const sendToBackend = async (data) => {
     try {
       const response = await fetch(
-        `${
-          process.env.REACT_APP_API_URL || "http://localhost:4000"
+        `${process.env.REACT_APP_API_URL || "http://localhost:4000"
         }/api/pelaporan`,
         {
           method: "POST",
@@ -135,6 +134,15 @@ function FormLaporan() {
 
   return (
     <div>
+      <button
+        style={{ float: "right", margin: "16px" }}
+        onClick={() => {
+          localStorage.removeItem("isLogin");
+          window.location.href = "/login";
+        }}
+      >
+        Logout
+      </button>
       <form className="form-laporan" onSubmit={handleSubmit}>
         <h2>Form Laporan</h2>
 

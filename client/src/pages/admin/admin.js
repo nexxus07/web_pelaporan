@@ -93,8 +93,8 @@ function Admin() {
       currentStatus === "proses"
         ? "Proses"
         : currentStatus === "sudah terlaksana"
-        ? "Sudah Terlaksana"
-        : "Proses"
+          ? "Sudah Terlaksana"
+          : "Proses"
     );
     setShowModal(true);
   };
@@ -147,6 +147,25 @@ function Admin() {
 
   return (
     <div className="admin-container">
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <button
+          style={{
+            background: "#e53935",
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            padding: "8px 18px",
+            fontWeight: 600,
+            cursor: "pointer"
+          }}
+          onClick={() => {
+            localStorage.removeItem("token");
+            window.location.href = "/login-admin";
+          }}
+        >
+          Logout
+        </button>
+      </div>
       <h2>Admin Panel</h2>
       <div className="nav-tabs">
         <button
