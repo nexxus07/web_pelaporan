@@ -7,12 +7,15 @@ import bcrypt from "bcryptjs";
 import xssClean from "xss-clean";
 import cookieParser from "cookie-parser";
 import csurf from "csurf";
+import { graphqlHTTP } from "express-graphql";
+import { buildSchema } from "graphql";
 
 // Import routes
 import pelaporanRoutes from "./routes/pelaporan.js";
 import userRoutes from "./routes/user.js";
 import adminRoutes from "./routes/admin.js"; // ✅ Tambahkan ini
 import Admin from "./models/Admin.js"; // ✅ Import model Admin
+import Pelaporan from "./models/Pelaporan.js";
 
 // Konfigurasi environment variable
 dotenv.config();
@@ -92,5 +95,59 @@ app.use((err, req, res, next) => {
   }
   next(err);
 });
+
+// Buat schema GraphQL
+const schema = buildSchema(`
+  type Pelaporan {
+    _id: ID
+    judul: String
+    jenis: String
+    laporan: String
+    tanggal_kejadian: String
+    provinsi: String
+    kabupaten: String
+    kecamatan: String
+    tujuan: String
+    kategori: String
+    status: String
+    createdAt: String
+    updatedAt: String
+  }
+
+  type Query {
+    pelaporans(filter: String): [Pelaporan]
+  }
+`);
+
+// Resolver
+const root = {
+  pelaporans: async ({ filter }) => {
+    if (!filter) return Pelaporan.find().sort({ createdAt: -1 });
+    const regex = new RegExp(filter, "i");
+    return Pelaporan.find({
+      $or: [
+        { judul: regex },
+        { jenis: regex },
+        { laporan: regex },
+        { provinsi: regex },
+        { kabupaten: regex },
+        { kecamatan: regex },
+        { tujuan: regex },
+        { kategori: regex },
+        { status: regex }
+      ]
+    }).sort({ createdAt: -1 });
+  }
+};
+
+// Tambahkan endpoint /graphql
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema,
+    rootValue: root,
+    graphiql: true, // aktifkan playground di browser
+  })
+);
 
 
