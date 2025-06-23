@@ -37,6 +37,17 @@ router.post("/login", async (req, res) => {
       expiresIn: "1d",
     });
 
+    const refreshToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 hari
+    });
+
     res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ error: "Gagal login" });
@@ -45,8 +56,13 @@ router.post("/login", async (req, res) => {
 
 // MIDDLEWARE PROTEKSI
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
+  let token = req.headers.authorization;
   if (!token) return res.status(403).json({ error: "Token tidak ditemukan" });
+
+  // Ambil token setelah "Bearer "
+  if (token.startsWith("Bearer ")) {
+    token = token.slice(7);
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

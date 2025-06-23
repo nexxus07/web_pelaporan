@@ -104,6 +104,14 @@
             border: 1.5px solid #1976d2;
         }
     }
+
+    // Tambahkan style untuk tombol logout di pojok kiri atas
+    .logout-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end; // kanan
+        margin-bottom: 16px;
+    }
 }
 
 .modal-backdrop {

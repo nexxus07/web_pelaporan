@@ -2,6 +2,16 @@ import React, { Component } from "react";
 import "./register.scss";
 import { auth } from '../config/firebase';
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import DOMPurify from "dompurify";
+
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 class Register extends Component {
     state = {
@@ -10,8 +20,11 @@ class Register extends Component {
     };
 
     handlechangetext = (e) => {
+        // Sanitize input email
+        let value = e.target.value;
+        if (e.target.id === "email") value = DOMPurify.sanitize(value);
         this.setState({
-            [e.target.id]: e.target.value,
+            [e.target.id]: value,
         });
     }
 

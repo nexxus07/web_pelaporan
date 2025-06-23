@@ -18,7 +18,7 @@ function Admin() {
     }
 
     fetch(`${API_URL}/api/admin/dashboard`, {
-      headers: { Authorization: token },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -147,7 +147,7 @@ function Admin() {
 
   return (
     <div className="admin-container">
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+      <div className="logout-container" style={{ justifyContent: "flex-end" }}>
         <button
           style={{
             background: "#e53935",

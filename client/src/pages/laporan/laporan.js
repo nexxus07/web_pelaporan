@@ -75,7 +75,9 @@ function FormLaporan() {
 
   // Menangani perubahan input
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Sanitize input sebelum masuk state
+    const value = DOMPurify.sanitize(e.target.value);
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   // Fungsi mengirim data ke backend (MongoDB Atlas via Express)
@@ -131,6 +133,15 @@ function FormLaporan() {
     setPreview(true); // Menampilkan preview
     sendToBackend(formData); // Kirim data
   };
+
+  function escapeHTML(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
   return (
     <div>
@@ -273,7 +284,7 @@ function FormLaporan() {
         <div className="preview-laporan">
           <h3>Preview Laporan Anda</h3>
           <div>
-            <strong>Judul:</strong> {DOMPurify.sanitize(formData.judul)}
+            <strong>Judul:</strong> {escapeHTML(formData.judul)}
           </div>
           <div>
             <strong>Laporan:</strong>

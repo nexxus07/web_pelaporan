@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import bcrypt from "bcryptjs";
+import xssClean from "xss-clean";
+import cookieParser from "cookie-parser";
+import csurf from "csurf";
 
 // Import routes
 import pelaporanRoutes from "./routes/pelaporan.js";
@@ -20,6 +23,18 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(xssClean());
+app.use(cookieParser());
+
+// Aktifkan CSRF protection hanya jika pakai cookie-based auth
+const csrfProtection = csurf({
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  },
+});
+// app.use(csrfProtection);
 
 /* ✅ Tambahkan fungsi ini sebelum koneksi */
 async function createDefaultAdmin() {
@@ -61,3 +76,21 @@ app.use("/api/admin", adminRoutes);
 
 // Route dasar
 app.get("/", (req, res) => res.send("SiPelMasD backend berjalan!"));
+
+// Gunakan CSRF hanya untuk route tertentu (misal, jika nanti ada route yang perlu cookie-based auth)
+// app.use("/api/some-cookie-route", csrfProtection, someRoute);
+
+// Endpoint untuk mengambil CSRF token (jika memang perlu)
+app.get("/api/csrf-token", csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+// Middleware error CSRF tetap boleh
+app.use((err, req, res, next) => {
+  if (err.code === "EBADCSRFTOKEN") {
+    return res.status(403).json({ error: "Invalid CSRF token" });
+  }
+  next(err);
+});
+
+

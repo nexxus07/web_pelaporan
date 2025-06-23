@@ -1,19 +1,23 @@
 import express from "express";
 import User from "../models/User.js";
+import xss from "xss";
 
 const router = express.Router();
 
 router.post("/save", async (req, res) => {
   const { uid, email } = req.body;
+  // Sanitize input
+  const safeUid = xss(uid);
+  const safeEmail = xss(email);
 
-  if (!uid || !email) {
+  if (!safeUid || !safeEmail) {
     return res.status(400).json({ error: "uid dan email diperlukan" });
   }
 
   try {
-    let user = await User.findOne({ uid });
+    let user = await User.findOne({ uid: safeUid });
     if (!user) {
-      user = new User({ uid, email });
+      user = new User({ uid: safeUid, email: safeEmail });
       await user.save();
     }
     res.status(200).json({ message: "User tersimpan", user });
