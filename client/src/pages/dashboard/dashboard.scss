@@ -1,16 +1,19 @@
+@import '../../assets/styles/variables';
+
 .dashboard-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(120deg, #f8fafc 0%, #e3e9f3 100%);
+    background: $background-color;
+    font-family: $font-family;
 }
 
 .dashboard-card {
     background: #fff;
     padding: 40px 32px;
-    border-radius: 18px;
-    box-shadow: 0 4px 32px rgba(44, 62, 80, 0.08);
+    border-radius: $border-radius;
+    box-shadow: 0 4px 32px rgba(31, 41, 55, 0.08);
     text-align: center;
     max-width: 420px;
     width: 100%;
@@ -18,13 +21,13 @@
 
 .dashboard-card h1 {
     font-size: 2rem;
-    color: #1976d2;
+    color: $primary-color;
     margin-bottom: 18px;
     font-weight: 700;
 }
 
 .dashboard-desc {
-    color: #444;
+    color: $text-muted;
     font-size: 1.1rem;
     margin-bottom: 32px;
     line-height: 1.6;
@@ -38,27 +41,27 @@
 
 .dashboard-btn {
     padding: 12px 28px;
-    background: #1976d2;
+    background: $accent-color;
     color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: $border-radius;
     font-size: 1rem;
     font-weight: 600;
     text-decoration: none;
     transition: background 0.2s;
-    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.07);
 
     &:hover {
-        background: #125ea7;
+        background: darken($accent-color, 10%);
     }
 }
 
 .dashboard-btn-secondary {
-    background: #e3e9f3;
-    color: #1976d2;
+    background: $background-color;
+    color: $primary-color;
 
     &:hover {
-        background: #cfd8dc;
-        color: #125ea7;
+        background: $secondary-color;
+        color: #fff;
     }
 }

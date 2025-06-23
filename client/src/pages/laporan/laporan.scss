@@ -1,20 +1,22 @@
+@import '../../assets/styles/variables';
+
 .form-laporan {
     max-width: 500px;
     margin: 40px auto;
     padding: 32px 24px;
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+    border-radius: $border-radius;
+    box-shadow: 0 2px 16px rgba(31, 41, 55, 0.08);
 
     h2 {
         text-align: center;
         margin-bottom: 24px;
-        color: #2d3a4b;
+        color: $primary-color;
     }
 
     label {
         font-weight: 500;
-        color: #2d3a4b;
+        color: $primary-color;
         margin-bottom: 6px;
         display: block;
     }
@@ -24,17 +26,18 @@
     select,
     textarea {
         width: 100%;
+        box-sizing: border-box; // tambahkan ini jika belum ada
         padding: 8px 12px;
         margin-top: 4px;
         margin-bottom: 16px;
-        border: 1px solid #cfd8dc;
-        border-radius: 6px;
+        border: 1px solid $secondary-color;
+        border-radius: $border-radius;
         font-size: 1rem;
-        background: #f7fafc;
+        background: $background-color;
         transition: border 0.2s;
 
         &:focus {
-            border-color: #1976d2;
+            border-color: $accent-color;
             outline: none;
             background: #fff;
         }
@@ -52,7 +55,7 @@
 
         label {
             font-weight: 400;
-            color: #444;
+            color: $text-muted;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -62,17 +65,17 @@
     button[type="submit"] {
         width: 100%;
         padding: 10px 0;
-        background: #1976d2;
+        background: $accent-color;
         color: #fff;
         border: none;
-        border-radius: 6px;
+        border-radius: $border-radius;
         font-size: 1.1rem;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.2s;
 
         &:hover {
-            background: #125ea7;
+            background: darken($accent-color, 10%);
         }
     }
 }
