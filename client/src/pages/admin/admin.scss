@@ -87,8 +87,22 @@
     .filter-container {
         width: 100%;
         display: flex;
-        justify-content: flex-end;
+        justify-content: flex-end; // dari center ke kanan
         margin-bottom: 12px;
+    }
+
+    .admin-filter-input {
+        width: 340px;
+        border-radius: 8px; // ubah dari 0 ke 8px untuk rounded corner
+        padding: 8px 14px;
+        border: 1px solid #bdbdbd;
+        font-size: 1rem;
+        outline: none;
+        transition: border 0.2s;
+
+        &:focus {
+            border: 1.5px solid #1976d2;
+        }
     }
 }
 

@@ -37,16 +37,13 @@ class Login extends Component {
     render() {
         return (
             <div>
-                {/* <p>Login Page</p>
-                <button onClick={() => window.location.href = '/register'}>Go to Register</button>
-                <button onClick={() => window.location.href = '/dashboard'}>Go to Dashboard</button> */}
-
                 <div className="auth-container">
                     <div className="auth-card">
                         <p className="auth-title">Login</p>
                         <input className="auth-input" id="email" placeholder="Email" type="email" onChange={this.handleChange} />
                         <input className="auth-input" id="password" placeholder="Password" type="password" onChange={this.handleChange} />
                         <button className="auth-button" onClick={this.handleLogin}>Login</button>
+                        <a href="/register" className="auth-link">Belum punya akun? Daftar di sini</a>
                     </div>
                 </div>
             </div>

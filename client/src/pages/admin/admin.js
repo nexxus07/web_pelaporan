@@ -21,13 +21,38 @@ function Admin() {
     const [provinsiList, setProvinsiList] = useState([]);
     const [kabupatenList, setKabupatenList] = useState({});
 
-    // Fetch pelaporans
-    const fetchPelaporans = async () => {
+    // TANDA: Menggunakan GraphQL untuk filter pencarian
+    const fetchPelaporansGraphQL = async (filter) => {
         setLoading(true);
         try {
-            const res = await fetch(`${API_URL}/api/pelaporan`);
-            const data = await res.json();
-            setPelaporans(data);
+            const res = await fetch(`${API_URL}/graphql`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    query: `
+                    query($filter: String) {
+                        pelaporans(filter: $filter) {
+                            _id
+                            jenis
+                            judul
+                            laporan
+                            tanggal_kejadian
+                            provinsi
+                            kabupaten
+                            kecamatan
+                            tujuan
+                            kategori
+                            status
+                            createdAt
+                        }
+                    }
+                `,
+                    variables: { filter }
+                }),
+            });
+            const result = await res.json();
+            console.log("GraphQL result:", result); // Tambahkan log ini
+            setPelaporans(result.data.pelaporans || []);
         } catch {
             setPelaporans([]);
         }
@@ -47,6 +72,19 @@ function Admin() {
         setLoading(false);
     };
 
+    // Fetch semua pelaporan (tanpa filter, pakai REST API)
+    const fetchPelaporans = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch(`${API_URL}/api/pelaporan`);
+            const data = await res.json();
+            setPelaporans(data);
+        } catch {
+            setPelaporans([]);
+        }
+        setLoading(false);
+    };
+
     // Fetch data referensi provinsi dan kabupaten
     useEffect(() => {
         fetch("/data/provinsi.json")
@@ -60,7 +98,9 @@ function Admin() {
     }, []);
 
     useEffect(() => {
-        if (tab === "pelaporans") fetchPelaporans();
+        if (tab === "pelaporans") {
+            fetchPelaporans();
+        }
         if (tab === "users") fetchUsers();
         // eslint-disable-next-line
     }, [tab]);
@@ -125,25 +165,24 @@ function Admin() {
     );
 
     return (
-        <div className="admin-container">
-            <h2>Admin Panel</h2>
-            <div className="nav-tabs">
-                <button
-                    className={tab === "pelaporans" ? "active" : ""}
-                    onClick={() => { setTab("pelaporans"); setFilter(""); }}
-                >
-                    Pelaporan
-                </button>
-                <button
-                    className={tab === "users" ? "active" : ""}
-                    onClick={() => { setTab("users"); setFilter(""); }}
-                >
-                    User
-                </button>
-            </div>
-
-            <div className="tab-content">
-                {/* Filter input di atas tabel */}
+        <div>
+            <div className="admin-container">
+                <h2>Admin Panel</h2>
+                <div className="nav-tabs">
+                    <button
+                        className={tab === "pelaporans" ? "active" : ""}
+                        onClick={() => { setTab("pelaporans"); setFilter(""); }}
+                    >
+                        Pelaporan
+                    </button>
+                    <button
+                        className={tab === "users" ? "active" : ""}
+                        onClick={() => { setTab("users"); setFilter(""); }}
+                    >
+                        User
+                    </button>
+                </div>
+                {/* Pindahkan filter-container ke sini */}
                 <div className="filter-container">
                     <input
                         type="text"
@@ -157,112 +196,114 @@ function Admin() {
                         className="admin-filter-input"
                     />
                 </div>
-
-                {/* Tabel di bawah filter */}
-                {tab === "pelaporans" && !loading && (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Judul</th>
-                                <th>Jenis</th>
-                                <th>Laporan</th>
-                                <th>Tanggal Kejadian</th>
-                                <th>Provinsi</th>
-                                <th>Kabupaten</th>
-                                <th>Kecamatan</th>
-                                <th>Tujuan</th>
-                                <th>Kategori</th>
-                                <th>Status</th>
-                                <th>Tanggal Input</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredPelaporans.map((p) => (
-                                <tr key={p._id}>
-                                    <td>{p.judul}</td>
-                                    <td>{p.jenis}</td>
-                                    <td>{p.laporan}</td>
-                                    <td>{new Date(p.tanggal_kejadian).toLocaleDateString()}</td>
-                                    <td>{getNamaProvinsi(p.provinsi)}</td>
-                                    <td>{getNamaKabupaten(p.provinsi, p.kabupaten)}</td>
-                                    <td>{p.kecamatan}</td>
-                                    <td>{p.tujuan}</td>
-                                    <td>{p.kategori}</td>
-                                    <td>{p.status}</td>
-                                    <td>{p.createdAt ? new Date(p.createdAt).toLocaleString() : ""}</td>
-                                    <td>
-                                        <button onClick={() => openModal(p._id, p.status)}>
-                                            Update Status
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            {filteredPelaporans.length === 0 && (
+                <div className="tab-content">
+                    {/*  */}
+                    {/* Tabel di bawah filter */}
+                    {tab === "pelaporans" && !loading && (
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td colSpan={12}>Tidak ada data</td>
+                                    <th>Judul</th>
+                                    <th>Jenis</th>
+                                    <th>Laporan</th>
+                                    <th>Tanggal Kejadian</th>
+                                    <th>Provinsi</th>
+                                    <th>Kabupaten</th>
+                                    <th>Kecamatan</th>
+                                    <th>Tujuan</th>
+                                    <th>Kategori</th>
+                                    <th>Status</th>
+                                    <th>Tanggal Input</th>
+                                    <th>Aksi</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                )}
+                            </thead>
+                            <tbody>
+                                {filteredPelaporans.map((p) => (
+                                    <tr key={p._id}>
+                                        <td>{p.judul}</td>
+                                        <td>{p.jenis}</td>
+                                        <td>{p.laporan}</td>
+                                        <td>{new Date(p.tanggal_kejadian).toLocaleDateString()}</td>
+                                        <td>{getNamaProvinsi(p.provinsi)}</td>
+                                        <td>{getNamaKabupaten(p.provinsi, p.kabupaten)}</td>
+                                        <td>{p.kecamatan}</td>
+                                        <td>{p.tujuan}</td>
+                                        <td>{p.kategori}</td>
+                                        <td>{p.status}</td>
+                                        <td>{p.createdAt ? new Date(p.createdAt).toLocaleString() : ""}</td>
+                                        <td>
+                                            <button onClick={() => openModal(p._id, p.status)}>
+                                                Update Status
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {filteredPelaporans.length === 0 && (
+                                    <tr>
+                                        <td colSpan={12}>Tidak ada data</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    )}
 
-                {tab === "users" && !loading && (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>UID</th>
-                                <th>Created At</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredUsers.map((u) => (
-                                <tr key={u._id}>
-                                    <td>{u.email}</td>
-                                    <td>{u.uid}</td>
-                                    <td>{new Date(u.createdAt).toLocaleString()}</td>
-                                    <td>
-                                        <button
-                                            style={{ background: "#e53935", color: "#fff", border: "none", borderRadius: "4px", padding: "6px 12px", cursor: "pointer" }}
-                                            onClick={() => handleDeleteUser(u._id)}
-                                        >
-                                            Hapus
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            {filteredUsers.length === 0 && (
+                    {tab === "users" && !loading && (
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td colSpan={4}>Tidak ada data</td>
+                                    <th>Email</th>
+                                    <th>UID</th>
+                                    <th>Created At</th>
+                                    <th>Aksi</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                )}
+                            </thead>
+                            <tbody>
+                                {filteredUsers.map((u) => (
+                                    <tr key={u._id}>
+                                        <td>{u.email}</td>
+                                        <td>{u.uid}</td>
+                                        <td>{new Date(u.createdAt).toLocaleString()}</td>
+                                        <td>
+                                            <button
+                                                style={{ background: "#e53935", color: "#fff", border: "none", borderRadius: "4px", padding: "6px 12px", cursor: "pointer" }}
+                                                onClick={() => handleDeleteUser(u._id)}
+                                            >
+                                                Hapus
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {filteredUsers.length === 0 && (
+                                    <tr>
+                                        <td colSpan={4}>Tidak ada data</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    )}
 
-                {/* Modal Update Status */}
-                {showModal && (
-                    <div className="modal-backdrop">
-                        <div className="modal-content">
-                            <h3>Update Status Pelaporan</h3>
-                            <select
-                                value={selectedStatus}
-                                onChange={e => setSelectedStatus(e.target.value)}
-                            >
-                                <option value="Proses">Proses</option>
-                                <option value="Sudah Terlaksana">Sudah Terlaksana</option>
-                            </select>
-                            <div style={{ marginTop: 16 }}>
-                                <button onClick={handleUpdateStatus} style={{ marginRight: 8 }}>
-                                    Simpan
-                                </button>
-                                <button onClick={closeModal}>Batal</button>
+                    {/* Modal Update Status */}
+                    {showModal && (
+                        <div className="modal-backdrop">
+                            <div className="modal-content">
+                                <h3>Update Status Pelaporan</h3>
+                                <select
+                                    value={selectedStatus}
+                                    onChange={e => setSelectedStatus(e.target.value)}
+                                >
+                                    <option value="Proses">Proses</option>
+                                    <option value="Sudah Terlaksana">Sudah Terlaksana</option>
+                                </select>
+                                <div style={{ marginTop: 16 }}>
+                                    <button onClick={handleUpdateStatus} style={{ marginRight: 8 }}>
+                                        Simpan
+                                    </button>
+                                    <button onClick={closeModal}>Batal</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

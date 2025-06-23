@@ -1,14 +1,22 @@
-import React, { Component } from "react";
+import React from "react";
+import "./dashboard.scss";
 
-class Dashboard extends Component {
-    render() {
-        return (
-            <div>
-                <p>kalo ini dashboard</p>
-                <button>Go to Register</button>
-                <button>Go to Dashboard</button>
+function Dashboard() {
+    return (
+        <div className="dashboard-container">
+            <div className="dashboard-card">
+                <h1>Selamat Datang di SiPelMasD</h1>
+                <p className="dashboard-desc">
+                    Sistem Pelaporan Masyarakat Digital<br />
+                    Silakan pilih menu di atas untuk melakukan pelaporan, melihat status, atau mengelola akun Anda.
+                </p>
+                <div className="dashboard-actions">
+                    <a href="/laporan" className="dashboard-btn">Buat Laporan</a>
+                    {/* <a href="/admin" className="dashboard-btn dashboard-btn-secondary">Admin Panel</a> */}
+                </div>
             </div>
-        )
-    }
+        </div>
+    );
 }
+
 export default Dashboard;
