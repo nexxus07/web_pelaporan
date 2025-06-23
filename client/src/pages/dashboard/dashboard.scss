@@ -36,11 +36,12 @@
 .dashboard-actions {
     display: flex;
     gap: 16px;
-    justify-content: center;
+    justify-content: flex-end; // ubah dari center ke flex-end agar tombol ke kanan
 }
 
-.dashboard-btn {
-    padding: 12px 28px;
+.dashboard-btn,
+.dashboard-btn-secondary {
+    padding: 12px 48px; // sebelumnya 12px 28px, sekarang lebih panjang
     background: $accent-color;
     color: #fff;
     border: none;
