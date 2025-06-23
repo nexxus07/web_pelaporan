@@ -1,26 +1,31 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import logo from "../../assets/image/logo/logo.svg";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Register from "../../register/register";
-import Dashboard from "../dashboard/dashboard";
-import Login from "../login/login";
-import Laporan from "../laporan/laporan"; // tambahkan ini
-import LoginAdmin from "../loginAdmin/loginAdmin";
-import Admin from "../admin/admin"; // Pastikan path ini benar sesuai struktur folder kamu
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { app, auth } from "../../config/firebase";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import rootReducer from "../../reducers"; // Pastikan file reducers/index.js ada
-import PrivateRoute from "../../components/PrivateRoute"; // pastikan path benar
+import rootReducer from "../../reducers";
+import PrivateRoute from "../../components/PrivateRoute";
 
 const store = createStore(rootReducer);
+
+// without lazy-loading
+import Login from "../login/login";
+import Dashboard from "../dashboard/dashboard";
+import Laporan from "../laporan/laporan";
+
+// Lazy-loaded pages
+const Register = lazy(() => import("../../register/register"));
+const LoginAdmin = lazy(() => import("../loginAdmin/loginAdmin"));
+const Admin = lazy(() => import("../admin/admin"));
+const UserProfile = lazy(() => import("../user/UserProfile"));
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <div>
+        <Suspense fallback={<div>Loading halaman...</div>}>
           <Routes>
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Dashboard />} />
@@ -34,9 +39,17 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route
+              path="/user/profile"
+              element={
+                <PrivateRoute>
+                  <UserProfile />
+                </PrivateRoute>
+              }
+            />
             <Route path="/admin" element={<Admin />} />
           </Routes>
-        </div>
+        </Suspense>
       </Router>
     </Provider>
   );
