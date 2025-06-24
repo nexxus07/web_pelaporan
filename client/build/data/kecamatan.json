@@ -1,0 +1,102 @@
+{
+  "1101": [
+    {
+      "id": "1101010",
+      "nama": "Teupah Selatan"
+    },
+    {
+      "id": "1101020",
+      "nama": "Simeulue Timur"
+    }
+  ],
+  "1102": [
+    {
+      "id": "1102010",
+      "nama": "Pulau Banyak"
+    },
+    {
+      "id": "1102020",
+      "nama": "Singkil"
+    }
+  ],
+  "1103": [
+    {
+      "id": "1103010",
+      "nama": "Tapaktuan"
+    },
+    {
+      "id": "1103020",
+      "nama": "Sama Dua"
+    }
+  ],
+  "1201": [
+    {
+      "id": "1201010",
+      "nama": "Gunungsitoli"
+    },
+    {
+      "id": "1201020",
+      "nama": "Gido"
+    }
+  ],
+  "1202": [
+    {
+      "id": "1202010",
+      "nama": "Panyabungan"
+    },
+    {
+      "id": "1202020",
+      "nama": "Siabu"
+    }
+  ],
+  "1271": [
+    {
+      "id": "1271010",
+      "nama": "Medan Baru"
+    },
+    {
+      "id": "1271020",
+      "nama": "Medan Tuntungan"
+    }
+  ],
+  "3171": [
+    {
+      "id": "3171010",
+      "nama": "Kebayoran Baru"
+    },
+    {
+      "id": "3171020",
+      "nama": "Pasar Minggu"
+    }
+  ],
+  "3172": [
+    {
+      "id": "3172010",
+      "nama": "Matraman"
+    },
+    {
+      "id": "3172020",
+      "nama": "Duren Sawit"
+    }
+  ],
+  "3201": [
+    {
+      "id": "3201010",
+      "nama": "Cibinong"
+    },
+    {
+      "id": "3201020",
+      "nama": "Gunung Putri"
+    }
+  ],
+  "3271": [
+    {
+      "id": "3271010",
+      "nama": "Andir"
+    },
+    {
+      "id": "3271020",
+      "nama": "Astana Anyar"
+    }
+  ]
+}
