@@ -16,15 +16,16 @@ root.render(
 
 // ✅ PWA: Daftarkan Service Worker
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/service-worker.js")
-      .then((registration) => {
-        console.log("✅ Service Worker terdaftar: ", registration.scope);
-      })
-      .catch((error) => {
-        console.error("❌ Service Worker gagal:", error);
+  navigator.serviceWorker.ready.then((registration) => {
+    registration.addEventListener("updatefound", () => {
+      const newWorker = registration.installing;
+      newWorker.addEventListener("statechange", () => {
+        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+          newWorker.postMessage({ type: "SKIP_WAITING" });
+          window.location.reload();
+        }
       });
+    });
   });
 }
 

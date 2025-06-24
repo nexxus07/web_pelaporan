@@ -1,4 +1,4 @@
-const CACHE_NAME = "pelaporan-cache-v1";
+const CACHE_NAME = "pelaporan-cache-v4"; // Ganti v2 ke v3, dst jika ada update
 const urlsToPreCache = [
   "/",
   "/index.html",
@@ -68,4 +68,10 @@ self.addEventListener("fetch", (event) => {
       return response || fetch(request).catch(() => caches.match("/index.html"));
     })
   );
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });

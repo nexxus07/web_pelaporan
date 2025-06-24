@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import "./userprofile.scss";
 
 function UserProfile() {
   const [userData, setUserData] = useState(null);
@@ -75,58 +76,54 @@ function UserProfile() {
     return <p style={{ padding: "20px" }}>Memuat profil...</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="user-profile-container">
       {isOffline && (
-        <p
-          style={{
-            background: "#ffe0e0",
-            padding: "10px",
-            borderRadius: "8px",
-            color: "#b30000",
-          }}
-        >
+        <div className="user-profile-offline">
           ⚠️ Kamu sedang offline. Data yang ditampilkan berasal dari cache.
-        </p>
+        </div>
       )}
 
       {/* === USER PROFILE === */}
-      <h2>Profil Pengguna</h2>
-      <p>
-        <strong>Nama:</strong> {userData?.nama || "(tidak tersedia)"}
-      </p>
-      <p>
-        <strong>Email:</strong> {userData?.email}
-      </p>
-      <p>
-        <strong>User ID:</strong> {userData?.uid}
-      </p>
+      <div className="user-profile-header">
+        <h2>Profil Pengguna</h2>
+      </div>
+      <div className="user-profile-info">
+        <p>
+          <strong>Email:</strong> {userData?.email}
+        </p>
+        <p>
+          <strong>User ID:</strong> {userData?.uid}
+        </p>
+      </div>
 
-      <hr style={{ margin: "30px 0" }} />
+      <hr className="user-profile-divider" />
 
       {/* === HISTORI LAPORAN === */}
-      <h2>Histori Laporan Anda</h2>
-      {loading ? (
-        <p>Memuat data laporan...</p>
-      ) : laporan.length === 0 ? (
-        <p>Belum ada laporan yang dikirim.</p>
-      ) : (
-        <ul>
-          {laporan.map((lapor) => (
-            <li key={lapor._id} style={{ marginBottom: "16px" }}>
-              <strong>{lapor.judul}</strong>
-              <br />
-              <span>
-                {lapor.kategori} - {lapor.status}
-              </span>
-              <br />
-              <small>
-                Tanggal Kejadian:{" "}
-                {new Date(lapor.tanggal_kejadian).toLocaleDateString()}
-              </small>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="user-profile-history">
+        <h2>Histori Laporan Anda</h2>
+        {loading ? (
+          <p>Memuat data laporan...</p>
+        ) : laporan.length === 0 ? (
+          <p>Belum ada laporan yang dikirim.</p>
+        ) : (
+          <ul>
+            {laporan.map((lapor) => (
+              <li key={lapor._id}>
+                <strong>{lapor.judul}</strong>
+                <br />
+                <span>
+                  {lapor.kategori} - {lapor.status}
+                </span>
+                <br />
+                <small>
+                  Tanggal Kejadian:{" "}
+                  {new Date(lapor.tanggal_kejadian).toLocaleDateString()}
+                </small>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

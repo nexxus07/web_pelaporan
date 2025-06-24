@@ -5,7 +5,7 @@ function Dashboard() {
     return (
         <div className="dashboard-container">
             <div className="dashboard-card">
-                
+
                 <h1>Selamat Datang di SiPelMasD</h1>
                 <p className="dashboard-desc">
                     <strong>Sistem Pelaporan Masyarakat Digital Desa</strong>
@@ -23,12 +23,12 @@ function Dashboard() {
                         <li>✅ Dukungan berbagai kategori laporan</li>
                     </ul>
                     <br />
-                    
+
                 </p>
                 <div className="dashboard-actions">
-                    
+
                     <a href="/login" className="dashboard-btn dashboard-btn-secondary">Login</a>
-                    
+
                 </div>
             </div>
         </div>

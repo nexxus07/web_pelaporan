@@ -77,8 +77,7 @@ function FormLaporan() {
   const sendToBackend = async (data) => {
     try {
       const response = await fetch(
-        `${
-          process.env.REACT_APP_API_URL || "http://localhost:4000"
+        `${process.env.REACT_APP_API_URL || "http://localhost:4000"
         }/api/pelaporan`,
         {
           method: "POST",
@@ -141,152 +140,164 @@ function FormLaporan() {
   }
 
   return (
-    <div>
-      <div style={{ float: "right", margin: "16px" }}>
-        <button onClick={() => (window.location.href = "/user/profile")}>
+    <>
+      {/* Sticky Navbar */}
+      <nav className="sticky-navbar-laporan">
+        <button
+          type="button"
+          onClick={() => (window.location.href = "/user/profile")}
+          className="dashboard-btn"
+        >
+          <span role="img" aria-label="profile" style={{ marginRight: 8 }}>👤</span>
           Profil Saya
         </button>
         <button
-          style={{ margin: "16px" }}
+          type="button"
+          className="dashboard-btn dashboard-btn-secondary"
           onClick={() => {
             localStorage.removeItem("isLogin");
             window.location.href = "/login";
           }}
         >
+          <span role="img" aria-label="logout" style={{ marginRight: 8 }}>🚪</span>
           Logout
         </button>
-      </div>
+      </nav>
 
-      <form className="form-laporan" onSubmit={handleSubmit}>
-        <h2>Form Laporan</h2>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="jenis"
-              value="pengaduan"
-              onChange={handleChange}
-              checked={formData.jenis === "pengaduan"}
-            />{" "}
-            Pengaduan
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="jenis"
-              value="aspirasi"
-              onChange={handleChange}
-              checked={formData.jenis === "aspirasi"}
-            />{" "}
-            Aspirasi
-          </label>
-        </div>
-        <label>Judul Pelaporan:</label>
-        <input
-          type="text"
-          name="judul"
-          value={formData.judul}
-          onChange={handleChange}
-          required
-        />
-        <label>Laporan Anda:</label>
-        <textarea
-          name="laporan"
-          value={formData.laporan}
-          onChange={handleChange}
-          required
-        />
-        <label>Tanggal Kejadian:</label>
-        <input
-          type="date"
-          name="tanggal_kejadian"
-          value={formData.tanggal_kejadian}
-          onChange={handleChange}
-          required
-        />
-        <label>Provinsi:</label>
-        <select
-          value={provId}
-          onChange={(e) => setProvId(e.target.value)}
-          required
-        >
-          <option value="">-- Pilih Provinsi --</option>
-          {provinsi.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.nama}
-            </option>
-          ))}
-        </select>
-        <label>Kabupaten:</label>
-        <select
-          value={kabId}
-          onChange={(e) => setKabId(e.target.value)}
-          disabled={!kabupaten.length}
-          required
-        >
-          <option value="">-- Pilih Kabupaten --</option>
-          {kabupaten.map((k) => (
-            <option key={k.id} value={k.id}>
-              {k.nama}
-            </option>
-          ))}
-        </select>
-        <label>Kecamatan:</label>
-        <select
-          name="kecamatan"
-          value={formData.kecamatan}
-          onChange={handleChange}
-          disabled={!kecamatan.length}
-          required
-        >
-          <option value="">-- Pilih Kecamatan --</option>
-          {kecamatan.map((kec, idx) => (
-            <option key={kec.id || idx} value={kec.nama}>
-              {kec.nama}
-            </option>
-          ))}
-        </select>
-        <label>Instansi Tujuan:</label>
-        <input
-          type="text"
-          name="tujuan"
-          value={formData.tujuan}
-          onChange={handleChange}
-          required
-        />
-        <label>Kategori:</label>
-        <select
-          name="kategori"
-          value={formData.kategori}
-          onChange={handleChange}
-          required
-        >
-          <option value="">-- Pilih Kategori --</option>
-          <option value="agama">Agama</option>
-          <option value="ekonomi_keuangan">Ekonomi dan Keuangan</option>
-          <option value="kesehatan">Kesehatan</option>
-          <option value="ketentraman">Ketentraman</option>
-          <option value="perlindungan">Perlindungan</option>
-        </select>
-        <button type="submit">Kirim Laporan</button>
-      </form>
-      {preview && (
-        <div className="preview-laporan">
-          <h3>Preview Laporan Anda</h3>
-          <div>
-            <strong>Judul:</strong> {escapeHTML(formData.judul)}
+      {/* Container Form */}
+      <div className="container-laporan">
+        {/* Form Laporan */}
+        <form className="form-laporan" onSubmit={handleSubmit}>
+          <h2>Form Laporan</h2>
+          <div className="radio-group">
+            <label>
+              <input
+                type="radio"
+                name="jenis"
+                value="pengaduan"
+                onChange={handleChange}
+                checked={formData.jenis === "pengaduan"}
+              />{" "}
+              Pengaduan
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="jenis"
+                value="aspirasi"
+                onChange={handleChange}
+                checked={formData.jenis === "aspirasi"}
+              />{" "}
+              Aspirasi
+            </label>
           </div>
-          <div>
-            <strong>Laporan:</strong>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(formData.laporan),
-              }}
-            />
+          <label>Judul Pelaporan:</label>
+          <input
+            type="text"
+            name="judul"
+            value={formData.judul}
+            onChange={handleChange}
+            required
+          />
+          <label>Laporan Anda:</label>
+          <textarea
+            name="laporan"
+            value={formData.laporan}
+            onChange={handleChange}
+            required
+          />
+          <label>Tanggal Kejadian:</label>
+          <input
+            type="date"
+            name="tanggal_kejadian"
+            value={formData.tanggal_kejadian}
+            onChange={handleChange}
+            required
+          />
+          <label>Provinsi:</label>
+          <select
+            value={provId}
+            onChange={(e) => setProvId(e.target.value)}
+            required
+          >
+            <option value="">-- Pilih Provinsi --</option>
+            {provinsi.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.nama}
+              </option>
+            ))}
+          </select>
+          <label>Kabupaten:</label>
+          <select
+            value={kabId}
+            onChange={(e) => setKabId(e.target.value)}
+            disabled={!kabupaten.length}
+            required
+          >
+            <option value="">-- Pilih Kabupaten --</option>
+            {kabupaten.map((k) => (
+              <option key={k.id} value={k.id}>
+                {k.nama}
+              </option>
+            ))}
+          </select>
+          <label>Kecamatan:</label>
+          <select
+            name="kecamatan"
+            value={formData.kecamatan}
+            onChange={handleChange}
+            disabled={!kecamatan.length}
+            required
+          >
+            <option value="">-- Pilih Kecamatan --</option>
+            {kecamatan.map((kec, idx) => (
+              <option key={kec.id || idx} value={kec.nama}>
+                {kec.nama}
+              </option>
+            ))}
+          </select>
+          <label>Instansi Tujuan:</label>
+          <input
+            type="text"
+            name="tujuan"
+            value={formData.tujuan}
+            onChange={handleChange}
+            required
+          />
+          <label>Kategori:</label>
+          <select
+            name="kategori"
+            value={formData.kategori}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Pilih Kategori --</option>
+            <option value="agama">Agama</option>
+            <option value="ekonomi_keuangan">Ekonomi dan Keuangan</option>
+            <option value="kesehatan">Kesehatan</option>
+            <option value="ketentraman">Ketentraman</option>
+            <option value="perlindungan">Perlindungan</option>
+          </select>
+          <button type="submit">Kirim Laporan</button>
+        </form>
+        {preview && (
+          <div className="preview-laporan">
+            <h3>Preview Laporan Anda</h3>
+            <div>
+              <strong>Judul:</strong> {escapeHTML(formData.judul)}
+            </div>
+            <div>
+              <strong>Laporan:</strong>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(formData.laporan),
+                }}
+              />
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 
