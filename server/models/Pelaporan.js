@@ -3,6 +3,11 @@ import mongoose from "mongoose";
 
 const PelaporanSchema = new mongoose.Schema(
   {
+    userId: {
+      // ✅ Tambahkan di sini
+      type: String,
+      required: true,
+    },
     jenis: {
       type: String,
       enum: ["pengaduan", "aspirasi"],

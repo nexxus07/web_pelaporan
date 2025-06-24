@@ -5,8 +5,13 @@ import Pelaporan from "../models/Pelaporan.js";
 const router = express.Router();
 
 // CREATE pelaporan
+// ✅ Tambahkan ini (insert)
 router.post("/", async (req, res) => {
   try {
+    if (!req.body.userId) {
+      return res.status(400).json({ message: "userId dibutuhkan" });
+    }
+
     const pelaporan = new Pelaporan(req.body);
     const saved = await pelaporan.save();
     res.status(201).json(saved);
@@ -15,11 +20,35 @@ router.post("/", async (req, res) => {
   }
 });
 
+// ✅ Tambahkan ini (get laporan per user)
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const laporanUser = await Pelaporan.find({
+      userId: req.params.userId,
+    }).sort({ createdAt: -1 });
+    res.json(laporanUser);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // READ semua pelaporan
 router.get("/", async (req, res) => {
   try {
     const all = await Pelaporan.find().sort({ createdAt: -1 });
     res.json(all);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ✅ Tambahkan ini (get laporan per user)
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const laporanUser = await Pelaporan.find({
+      userId: req.params.userId,
+    }).sort({ createdAt: -1 });
+    res.json(laporanUser);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

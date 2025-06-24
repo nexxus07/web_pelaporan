@@ -1,5 +1,6 @@
 // File: laporan.js
 import React, { useEffect, useState } from "react";
+import { getAuth } from "firebase/auth";
 import DOMPurify from "dompurify";
 import "./laporan.scss";
 
@@ -7,10 +8,8 @@ function FormLaporan() {
   const [provinsi, setProvinsi] = useState([]);
   const [kabupaten, setKabupaten] = useState([]);
   const [kecamatan, setKecamatan] = useState([]);
-
   const [provId, setProvId] = useState("");
   const [kabId, setKabId] = useState("");
-
   const [formData, setFormData] = useState({
     jenis: "",
     judul: "",
@@ -23,10 +22,8 @@ function FormLaporan() {
     kecamatan: "",
     status: "belum terlaksana",
   });
-
   const [preview, setPreview] = useState(false);
 
-  // Ambil data provinsi
   useEffect(() => {
     fetch("/data/provinsi.json")
       .then((res) => res.json())
@@ -34,7 +31,6 @@ function FormLaporan() {
       .catch(() => setProvinsi([]));
   }, []);
 
-  // Ambil data kabupaten berdasarkan provinsi
   useEffect(() => {
     if (provId) {
       fetch("/data/kabupaten.json")
@@ -58,7 +54,6 @@ function FormLaporan() {
     }
   }, [provId]);
 
-  // Ambil data kecamatan berdasarkan kabupaten
   useEffect(() => {
     if (kabId) {
       fetch("/data/kecamatan.json")
@@ -73,16 +68,15 @@ function FormLaporan() {
     }
   }, [kabId]);
 
-  // Menangani perubahan input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Fungsi mengirim data ke backend (MongoDB Atlas via Express)
   const sendToBackend = async (data) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL || "http://localhost:4000"
+        `${
+          process.env.REACT_APP_API_URL || "http://localhost:4000"
         }/api/pelaporan`,
         {
           method: "POST",
@@ -103,7 +97,6 @@ function FormLaporan() {
       const result = await response.json();
       alert("Laporan berhasil dikirim!\nID: " + result._id);
 
-      // Reset form
       setFormData({
         jenis: "",
         judul: "",
@@ -125,28 +118,36 @@ function FormLaporan() {
     }
   };
 
-  // Menangani submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-    setPreview(true); // Menampilkan preview
-    sendToBackend(formData); // Kirim data
+    setPreview(true);
+    const user = getAuth().currentUser;
+    if (!user) {
+      alert("Anda belum login.");
+      return;
+    }
+    sendToBackend({ ...formData, userId: user.uid });
   };
 
   return (
     <div>
-      <button
-        style={{ float: "right", margin: "16px" }}
-        onClick={() => {
-          localStorage.removeItem("isLogin");
-          window.location.href = "/login";
-        }}
-      >
-        Logout
-      </button>
+      <div style={{ float: "right", margin: "16px" }}>
+        <button onClick={() => (window.location.href = "/user/profile")}>
+          Profil Saya
+        </button>
+        <button
+          style={{ margin: "16px" }}
+          onClick={() => {
+            localStorage.removeItem("isLogin");
+            window.location.href = "/login";
+          }}
+        >
+          Logout
+        </button>
+      </div>
+
       <form className="form-laporan" onSubmit={handleSubmit}>
         <h2>Form Laporan</h2>
-
-        {/* Jenis Laporan */}
         <div className="radio-group">
           <label>
             <input
@@ -155,7 +156,7 @@ function FormLaporan() {
               value="pengaduan"
               onChange={handleChange}
               checked={formData.jenis === "pengaduan"}
-            />
+            />{" "}
             Pengaduan
           </label>
           <label>
@@ -165,11 +166,10 @@ function FormLaporan() {
               value="aspirasi"
               onChange={handleChange}
               checked={formData.jenis === "aspirasi"}
-            />
+            />{" "}
             Aspirasi
           </label>
         </div>
-
         <label>Judul Pelaporan:</label>
         <input
           type="text"
@@ -178,7 +178,6 @@ function FormLaporan() {
           onChange={handleChange}
           required
         />
-
         <label>Laporan Anda:</label>
         <textarea
           name="laporan"
@@ -186,7 +185,6 @@ function FormLaporan() {
           onChange={handleChange}
           required
         />
-
         <label>Tanggal Kejadian:</label>
         <input
           type="date"
@@ -195,7 +193,6 @@ function FormLaporan() {
           onChange={handleChange}
           required
         />
-
         <label>Provinsi:</label>
         <select
           value={provId}
@@ -209,7 +206,6 @@ function FormLaporan() {
             </option>
           ))}
         </select>
-
         <label>Kabupaten:</label>
         <select
           value={kabId}
@@ -224,7 +220,6 @@ function FormLaporan() {
             </option>
           ))}
         </select>
-
         <label>Kecamatan:</label>
         <select
           name="kecamatan"
@@ -240,7 +235,6 @@ function FormLaporan() {
             </option>
           ))}
         </select>
-
         <label>Instansi Tujuan:</label>
         <input
           type="text"
@@ -249,7 +243,6 @@ function FormLaporan() {
           onChange={handleChange}
           required
         />
-
         <label>Kategori:</label>
         <select
           name="kategori"
@@ -264,11 +257,8 @@ function FormLaporan() {
           <option value="ketentraman">Ketentraman</option>
           <option value="perlindungan">Perlindungan</option>
         </select>
-
         <button type="submit">Kirim Laporan</button>
       </form>
-
-      {/* Preview laporan */}
       {preview && (
         <div className="preview-laporan">
           <h3>Preview Laporan Anda</h3>
